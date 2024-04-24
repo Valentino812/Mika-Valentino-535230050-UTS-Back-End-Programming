@@ -65,7 +65,7 @@ async function getUsers(page_number, page_size, sort, search) {
 
   let results = {
     page_size,
-    count: paginatedUsers.length,
+    count: users.length,
     totalPages,
     has_previous_page: false,
     has_next_page: false,
@@ -77,7 +77,7 @@ async function getUsers(page_number, page_size, sort, search) {
     results = {
       page_number,
       page_size,
-      count: paginatedUsers.length,
+      count: users.length,
       totalPages,
       has_previous_page: page_number > 1,
       has_next_page: page_number < totalPages,
