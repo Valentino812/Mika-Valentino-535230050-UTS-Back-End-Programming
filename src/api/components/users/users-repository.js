@@ -1,4 +1,5 @@
 const { User } = require('../../../models');
+const { name } = require('../../../models/users-schema');
 
 /**
  * Get a list of users
@@ -6,6 +7,42 @@ const { User } = require('../../../models');
  */
 async function getUsers() {
   return User.find({});
+}
+
+/**
+ * Get a list of users with specific criteria
+ * @param {string} fieldSearch
+ * @param {string} searchKey
+ * @param {string} fieldOrder
+ * @param {string} sortOrder
+ * @returns {Promise}
+ */
+async function getUsersSpecific(fieldSearch, searchKey, fieldOrder, sortOrder) {
+  let users = []; // new array containing users information
+
+  // Filtering users based on the search criteria
+  if (fieldSearch && searchKey) {
+    // Attempting case-insensitive (characters will be matched regardless of their case
+    // (uppercase or lowercase)) pattern matching with search key in the field
+    users = await User.find({
+      [fieldSearch]: { $regex: searchKey, $options: 'i' },
+    });
+  } else {
+    users = await User.find({});
+  }
+
+  // Ordering users based on the order criteria
+  if (fieldOrder === 'email') {
+    users.sort(
+      (a, b) => a.email.localeCompare(b.email) * (sortOrder === 'asc' ? 1 : -1)
+    );
+  } else if (fieldOrder === 'name') {
+    users.sort(
+      (a, b) => a.name.localeCompare(b.name) * (sortOrder === 'asc' ? 1 : -1)
+    );
+  }
+
+  return users;
 }
 
 /**
@@ -83,6 +120,7 @@ async function changePassword(id, password) {
 
 module.exports = {
   getUsers,
+  getUsersSpecific,
   getUser,
   createUser,
   updateUser,

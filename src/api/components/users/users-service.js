@@ -3,19 +3,86 @@ const { hashPassword, passwordMatched } = require('../../../utils/password');
 
 /**
  * Get list of users
+ * @param {integer} page_number
+ * @param {integer} page_size
+ * @param {string} sort
+ * @param {string} search
  * @returns {Array}
  */
-async function getUsers() {
-  const users = await usersRepository.getUsers();
+async function getUsers(page_number, page_size, sort, search) {
+  // Getting search field search and search key from search
+  const [fieldSearch, searchKey] = search
+    ? search.split(':')
+    : [undefined, undefined];
 
-  const results = [];
-  for (let i = 0; i < users.length; i += 1) {
-    const user = users[i];
-    results.push({
+  // Getting sort field order and sort order from order
+  const [fieldOrder, sortOrder] = sort ? sort.split(':') : ['email', 'asc'];
+
+  // Getting users data array with specific criteria (search/filter and order)
+  const users = await usersRepository.getUsersSpecific(
+    fieldSearch,
+    searchKey,
+    fieldOrder,
+    sortOrder
+  );
+
+  // Set page_size to the number of all users data if not provided
+  if (!page_size) {
+    page_size = users.length;
+  }
+
+  // Pagination with page number and page size
+
+  // Total of the pages
+  // (the result of the division will be rounded up)
+  const totalPages = Math.ceil(users.length / page_size);
+
+  // Default start index and end index of the users array
+  // without pagination (without page_number)
+  let start = 0;
+  let end = users.length;
+
+  if (page_number) {
+    start = (page_number - 1) * page_size;
+    // (Math.min is used to make sure that the final index
+    //  will not be more than the users array length)
+    end = Math.min(start + page_size, users.length);
+  }
+
+  // Slicing the users array
+  const paginatedUsers = users.slice(start, end);
+
+  // Final users data array
+  const usersResults = [];
+  for (let i = 0; i < paginatedUsers.length; i += 1) {
+    const user = paginatedUsers[i];
+    usersResults.push({
       id: user.id,
       name: user.name,
       email: user.email,
     });
+  }
+
+  let results = {
+    page_size,
+    count: paginatedUsers.length,
+    totalPages,
+    has_previous_page: false,
+    has_next_page: false,
+    data: usersResults,
+  };
+
+  // Adding page_number to results if exists
+  if (page_number) {
+    results = {
+      page_number,
+      page_size,
+      count: paginatedUsers.length,
+      totalPages,
+      has_previous_page: page_number > 1,
+      has_next_page: page_number < totalPages,
+      data: usersResults,
+    };
   }
 
   return results;

@@ -48,4 +48,13 @@ module.exports = {
       password_confirm: joi.string().required().label('Password confirmation'),
     },
   },
+  // Validation of GET /users request query 
+  getUsers: { 
+    query: joi.object({ 
+      page_number: joi.number().integer().min(0).optional().label('Page number'),
+      page_size: joi.number().integer().min(0).optional().label('Page size'),
+      sort: joi.string().pattern(/^(name|email):(asc|desc)$/i).default('email:asc').optional().label('Sort'),
+      search: joi.string().pattern(/^(email|name):.*$/i).optional().label('Search'),
+    }),
+  },
 };
