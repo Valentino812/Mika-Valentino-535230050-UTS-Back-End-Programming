@@ -63,24 +63,27 @@ async function getUsers(page_number, page_size, sort, search) {
     });
   }
 
-  let results = {
-    page_size,
-    count: users.length,
-    totalPages,
-    has_previous_page: false,
-    has_next_page: false,
-    data: usersResults,
-  };
-
+  let results;
   // Adding page_number to results if exists
   if (page_number) {
     results = {
       page_number,
       page_size,
-      count: users.length,
+      count: paginatedUsers.length,
       totalPages,
       has_previous_page: page_number > 1,
       has_next_page: page_number < totalPages,
+      data: usersResults,
+    };
+  } else {
+    page_number = 1;
+    results = {
+      page_number,
+      page_size,
+      count: paginatedUsers.length,
+      totalPages,
+      has_previous_page: false,
+      has_next_page: false,
       data: usersResults,
     };
   }
