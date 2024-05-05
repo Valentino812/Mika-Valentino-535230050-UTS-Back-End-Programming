@@ -105,7 +105,6 @@ async function getInfo(request, response, next) {
       const attemptsLimitReached =
         await bankingService.attemptsLimitReached(username);
       if (attemptsLimitReached) {
-        const blockAccount = bankingService.blockAccount(username);
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Layanan anda telah terblokir, silahkan hubungi costumer service'
@@ -175,10 +174,10 @@ async function updateAccount(request, response, next) {
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
+      const attemptsLeft = (getAttempts - 3) * -1;
       const attemptsLimitReached =
         await bankingService.attemptsLimitReached(username);
       if (attemptsLimitReached) {
-        const blockAccount = bankingService.blockAccount(username);
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Layanan anda telah terblokir, silahkan hubungi costumer service'
@@ -187,7 +186,7 @@ async function updateAccount(request, response, next) {
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Anda dapat memasukan password sebanyak ' +
-            getAttempts +
+            attemptsLeft +
             ' kali lagi sebelum terblokir'
         );
       }
@@ -253,10 +252,10 @@ async function deleteAccount(request, response, next) {
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
+      const attemptsLeft = (getAttempts - 3) * -1;
       const attemptsLimitReached =
         await bankingService.attemptsLimitReached(username);
       if (attemptsLimitReached) {
-        const blockAccount = bankingService.blockAccount(username);
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Layanan anda telah terblokir, silahkan hubungi costumer service'
@@ -265,7 +264,7 @@ async function deleteAccount(request, response, next) {
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Anda dapat memasukan password sebanyak ' +
-            getAttempts +
+          attemptsLeft +
             ' kali lagi sebelum terblokir'
         );
       }
@@ -314,10 +313,10 @@ async function transactionHistory(request, response, next) {
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
+      const attemptsLeft = (getAttempts - 3) * -1;
       const attemptsLimitReached =
         await bankingService.attemptsLimitReached(username);
       if (attemptsLimitReached) {
-        const blockAccount = bankingService.blockAccount(username);
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Layanan anda telah terblokir, silahkan hubungi costumer service'
@@ -326,7 +325,7 @@ async function transactionHistory(request, response, next) {
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Anda dapat memasukan password sebanyak ' +
-            getAttempts +
+            attemptsLeft +
             ' kali lagi sebelum terblokir'
         );
       }
@@ -379,10 +378,10 @@ async function accountDeposit(request, response, next) {
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
+      const attemptsLeft = (getAttempts - 3) * -1;
       const attemptsLimitReached =
         await bankingService.attemptsLimitReached(username);
       if (attemptsLimitReached) {
-        const blockAccount = bankingService.blockAccount(username);
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Layanan anda telah terblokir, silahkan hubungi costumer service'
@@ -391,7 +390,7 @@ async function accountDeposit(request, response, next) {
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Anda dapat memasukan password sebanyak ' +
-            getAttempts +
+            attemptsLeft +
             ' kali lagi sebelum terblokir'
         );
       }
@@ -437,10 +436,10 @@ async function accountWithdraw(request, response, next) {
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
+      const attemptsLeft = (getAttempts - 3) * -1;
       const attemptsLimitReached =
         await bankingService.attemptsLimitReached(username);
       if (attemptsLimitReached) {
-        const blockAccount = bankingService.blockAccount(username);
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Layanan anda telah terblokir, silahkan hubungi costumer service'
@@ -449,7 +448,7 @@ async function accountWithdraw(request, response, next) {
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Anda dapat memasukan password sebanyak ' +
-            getAttempts +
+            attemptsLeft +
             ' kali lagi sebelum terblokir'
         );
       }
@@ -506,10 +505,10 @@ async function accountTransfer(request, response, next) {
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
+      const attemptsLeft = (getAttempts - 3) * -1;
       const attemptsLimitReached =
         await bankingService.attemptsLimitReached(username);
       if (attemptsLimitReached) {
-        const blockAccount = bankingService.blockAccount(username);
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Layanan anda telah terblokir, silahkan hubungi costumer service'
@@ -518,7 +517,7 @@ async function accountTransfer(request, response, next) {
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Anda dapat memasukan password sebanyak ' +
-            getAttempts +
+            attemptsLeft +
             ' kali lagi sebelum terblokir'
         );
       }
@@ -546,7 +545,9 @@ async function accountTransfer(request, response, next) {
       throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Transfer gagal');
     }
 
-    return response.status(200).json({ username, jumlah, noRekTujuan, success });
+    return response
+      .status(200)
+      .json({ username, jumlah, noRekTujuan, success });
   } catch (error) {
     return next(error);
   }
@@ -587,6 +588,7 @@ async function changePassword(request, response, next) {
     if (!(await bankingService.checkPassword(username, password_lama))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
+      const attemptsLeft = (getAttempts - 3) * -1;
       const attemptsLimitReached =
         await bankingService.attemptsLimitReached(username);
       if (attemptsLimitReached) {
@@ -598,7 +600,7 @@ async function changePassword(request, response, next) {
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
           'Password anda salah. Anda dapat memasukan password sebanyak ' +
-            getAttempts +
+            attemptsLeft +
             ' kali lagi sebelum terblokir'
         );
       }

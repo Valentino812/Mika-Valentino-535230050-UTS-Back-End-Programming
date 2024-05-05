@@ -39,7 +39,6 @@ async function createAccount(
       username,
       hashedPassword,
     );
-    // await bankingRepository.createAccountBalance(username);
   } catch (err) {
     return null;
   }
@@ -425,7 +424,7 @@ async function resetAttempts(username) {
 async function attemptsLimitReached(username) {
   const account = await bankingRepository.getAccount(username);
   const loginAttempt = account.attempts;
-  return loginAttempt && loginAttempt.attempts >= 3;
+  return loginAttempt && loginAttempt >= 3;
 }
 
 module.exports = {
