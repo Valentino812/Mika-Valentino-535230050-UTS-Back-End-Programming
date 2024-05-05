@@ -26,7 +26,7 @@ async function createAccount(
   password
 ) {
   // Hash password
-  const hashedPassword = hashPassword(password);
+  const hashedPassword = await hashPassword(password);
   try {
     await bankingRepository.createAccount(
       nama_lengkap,
