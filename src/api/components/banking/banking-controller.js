@@ -29,11 +29,11 @@ async function createAccount(request, response, next) {
       );
     }
 
-    // Username harus belum di ambil
+    // Username harus unik
     const usernameTaken = await bankingService.usernameTaken(username);
     if (usernameTaken) {
       throw errorResponder(
-        errorTypes.EMAIL_ALREADY_TAKEN,
+        errorTypes.DB_DUPLICATE_CONFLICT,
         'Username telah di ambil'
       );
     }
@@ -92,12 +92,12 @@ async function getInfo(request, response, next) {
     const blocked = await bankingService.attemptsLimitReached(username);
     if (blocked) {
       throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
+        errorTypes.FORBIDDEN,
         'Layanan anda telah terblokir, silahkan hubungi costumer service'
       );
     }
 
-    // Cek kebenaran password
+    // Cek kebenaran password (bila tidak benar maka dicatat kegagalanya pada failed login attempts)
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
@@ -153,7 +153,7 @@ async function updateAccount(request, response, next) {
     const blocked = await bankingService.attemptsLimitReached(username);
     if (blocked) {
       throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
+        errorTypes.FORBIDDEN,
         'Layanan anda telah terblokir, silahkan hubungi costumer service'
       );
     }
@@ -171,7 +171,7 @@ async function updateAccount(request, response, next) {
       );
     }
 
-    // Cek kebenaran password
+    // Cek kebenaran password (bila tidak benar maka dicatat kegagalanya pada failed login attempts)
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
@@ -244,12 +244,12 @@ async function deleteAccount(request, response, next) {
     const blocked = await bankingService.attemptsLimitReached(username);
     if (blocked) {
       throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
+        errorTypes.FORBIDDEN,
         'Layanan anda telah terblokir, silahkan hubungi costumer service'
       );
     }
 
-    // Cek kebenaran password
+    // Cek kebenaran password (bila tidak benar maka dicatat kegagalanya pada failed login attempts)
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
@@ -305,12 +305,12 @@ async function transactionHistory(request, response, next) {
     const blocked = await bankingService.attemptsLimitReached(username);
     if (blocked) {
       throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
+        errorTypes.FORBIDDEN,
         'Layanan anda telah terblokir, silahkan hubungi costumer service'
       );
     }
 
-    // Cek kebenaran password
+    // Cek kebenaran password (bila tidak benar maka dicatat kegagalanya pada failed login attempts)
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
@@ -370,12 +370,12 @@ async function accountDeposit(request, response, next) {
     const blocked = await bankingService.attemptsLimitReached(username);
     if (blocked) {
       throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
+        errorTypes.FORBIDDEN,
         'Layanan anda telah terblokir, silahkan hubungi costumer service'
       );
     }
 
-    // Cek kebenaran password
+    // Cek kebenaran password (bila tidak benar maka dicatat kegagalanya pada failed login attempts)
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
@@ -428,12 +428,12 @@ async function accountWithdraw(request, response, next) {
     const blocked = await bankingService.attemptsLimitReached(username);
     if (blocked) {
       throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
+        errorTypes.FORBIDDEN,
         'Layanan anda telah terblokir, silahkan hubungi costumer service'
       );
     }
 
-    // Cek kebenaran password
+    // Cek kebenaran password (bila tidak benar maka dicatat kegagalanya pada failed login attempts)
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
@@ -497,12 +497,12 @@ async function accountTransfer(request, response, next) {
     const blocked = await bankingService.attemptsLimitReached(username);
     if (blocked) {
       throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
+        errorTypes.FORBIDDEN,
         'Layanan anda telah terblokir, silahkan hubungi costumer service'
       );
     }
 
-    // Cek kebenaran password
+    // Cek kebenaran password (bila tidak benar maka dicatat kegagalanya pada failed login attempts)
     if (!(await bankingService.checkPassword(username, password))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);
@@ -570,7 +570,7 @@ async function changePassword(request, response, next) {
     const blocked = await bankingService.attemptsLimitReached(username);
     if (blocked) {
       throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
+        errorTypes.FORBIDDEN,
         'Layanan anda telah terblokir, silahkan hubungi costumer service'
       );
     }
@@ -583,7 +583,7 @@ async function changePassword(request, response, next) {
       );
     }
 
-    // Cek kebenaran password lama
+    // Cek kebenaran password lama (bila tidak benar maka dicatat kegagalanya pada failed login attempts)
     if (!(await bankingService.checkPassword(username, password_lama))) {
       const addAttempts = await bankingService.addAttempts(username);
       const getAttempts = await bankingService.getAttempts(username);

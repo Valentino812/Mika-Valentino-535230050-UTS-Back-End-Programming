@@ -117,7 +117,7 @@ async function deleteAccount(username) {
 }
 
 /**
- * Get balance info and history list for an account by spesific criteria
+ * Get balance info and transaction history list for an account by spesific criteria
  * @param {string} jenis_transaksi
  * @param {string} urutan
  * @param {string} username
@@ -246,7 +246,7 @@ async function accountTransfer(username, berita, noRekTujuan, jumlah) {
 }
 
 /**
- * Change user password
+ * Change account password
  * @param {string} username - Username
  * @param {string} password - New password
  * @returns {boolean}
@@ -259,6 +259,7 @@ async function changePassword(username, password) {
     return null;
   }
 
+  // Hash password
   const hashedPassword = await hashPassword(password);
 
   const changeSuccess = await bankingRepository.changePassword(
@@ -274,7 +275,7 @@ async function changePassword(username, password) {
 }
 
 /**
- * Check whether the username is taken
+ * Check whether the username is already taken
  * @param {string} username
  * @returns {boolean}
  */
@@ -289,8 +290,8 @@ async function usernameTaken(username) {
 }
 
 /**
- * Check whether the email and no_telepon is registered if
- * the email and no_telepon are diffrent from the current account info
+ * Check whether email and no_telepon is registered if
+ * the email and no_telepon are diffrent in the current account info
  * @param {string} username
  * @param {string} email
  * @param {string} no_telepon
@@ -389,7 +390,7 @@ async function checkPassword(username, password) {
 }
 
 /**
- * Increase the login attempts the account
+ * Increase the failed login attempts the account
  * @param {string} username
  * @returns {Promise}
  */
@@ -398,7 +399,7 @@ async function addAttempts(username) {
 }
 
 /**
- * Get the number of login attempts for the account
+ * Get the number of failed login attempts for the account
  * @param {string} username - Username
  * @returns {number}
  */
@@ -408,7 +409,7 @@ async function getAttempts(username) {
 }
 
 /**
- * Reset login attempts count for the account
+ * Reset failed login attempts count for the account
  * @param {string} username
  * @returns {Promise}
  */
@@ -417,8 +418,8 @@ async function resetAttempts(username) {
 }
 
 /**
- * Check if login attempts limit is reached for the account (The limit is 3)
- * @param {string} username - Username
+ * Check if failed login attempts limit is reached for the account (The limit is 3)
+ * @param {string} username 
  * @returns {boolean}
  */
 async function attemptsLimitReached(username) {

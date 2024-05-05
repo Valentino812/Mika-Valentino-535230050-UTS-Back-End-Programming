@@ -42,7 +42,7 @@ module.exports = (app) => {
     bankingControllers.deleteAccount
   );
 
-  // Mendapatkan informasi dan histori transaksi akun
+  // Mendapatkan informasi saldo dan histori transaksi akun
   route.get(
     '/account/transaction',
     authenticationMiddleware,

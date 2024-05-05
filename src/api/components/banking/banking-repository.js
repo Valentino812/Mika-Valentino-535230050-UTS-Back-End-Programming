@@ -4,12 +4,13 @@ const {
   BankingAccountBalance,
 } = require('../../../models');
 
+// Function to generate random numbers
 function generateRandomNumber(length) {
   let randomNumber = '';
 
   for (let i = 0; i < length; i++) {
-    const digit = Math.floor(Math.random() * 10); // Menghasilkan angka acak antara 0-9
-    randomNumber += digit.toString(); // Mengonversi angka menjadi string dan menambahkannya ke nomor rekening
+    const digit = Math.floor(Math.random() * 10);
+    randomNumber += digit.toString(); // Converting numbers to string to be use as account number
   }
 
   return randomNumber;
@@ -147,9 +148,15 @@ async function getTransactionHistory(jenis, urutan, username) {
 
   // Getting transaction list based on the transaction type
   if (jenis === 'masuk') {
-    transactionList = await BankingTransaction.find({ no_rekening, jenis_transaksi: jenis });
+    transactionList = await BankingTransaction.find({
+      no_rekening,
+      jenis_transaksi: jenis,
+    });
   } else if (jenis === 'keluar') {
-    transactionList = await BankingTransaction.find({ no_rekening, jenis_transaksi: jenis });
+    transactionList = await BankingTransaction.find({
+      no_rekening,
+      jenis_transaksi: jenis,
+    });
   } else {
     transactionList = await BankingTransaction.find({ no_rekening });
   }
@@ -208,7 +215,7 @@ async function accountDeposit(username, tanggal, jumlah) {
 }
 
 /**
- * Withdraw to account
+ * Withdraw from account
  * @param {string} username
 
  * @param {number} jumlah
@@ -359,7 +366,7 @@ async function getBalanceInfo(username) {
 }
 
 /**
- * Update failed login attempts for an account
+ * Update by incrementing the number of failed login attempts for an account
  * @param {string} username
  * @returns {Promise}
  */
@@ -367,7 +374,10 @@ async function updateLoginAttempt(username) {
   const account = await BankingAccountInfos.findOne({ username });
   const currentAttempts = account.attempts;
   const newAttempts = currentAttempts + 1;
-  return await BankingAccountInfos.updateOne({ username }, { attempts: newAttempts });
+  return await BankingAccountInfos.updateOne(
+    { username },
+    { attempts: newAttempts }
+  );
 }
 
 /**
